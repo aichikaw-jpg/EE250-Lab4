@@ -1,4 +1,4 @@
-"""EE 250L Lab 04 start chain code """
+"""EE 250L Lab 04 continue chain code """
 
 
 import paho.mqtt.client as mqtt
@@ -11,8 +11,7 @@ a connection acknowledgement packet response from the server. """
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
 
-
-def on_message_from_pong(client,userdata,message):
+def on_message_from_ping(client,userdata,message):
         #cast the payload and convert it to integer
         messageNum = int(message.payload.decode())
 
@@ -23,16 +22,13 @@ def on_message_from_pong(client,userdata,message):
         print("Number Received: "+messageNum)
         time.sleep(1)
 
-        client.publish("aichikaw/ping", str(new_val))
+        client.publish("aichikaw/pong", str(new_val))
 
 
 if __name__ == '__main__':
     #IP address of rpi
     ip_address="10.189.147.211" 
     """your code here"""
-
-    #payload: integer number
-    payloadNum = 4
 
     #create a client object
     client = mqtt.Client()
@@ -49,19 +45,13 @@ if __name__ == '__main__':
     `client.on_connect` will be called."""
 
     client.connect(host="10.189.147.211", port=1883, keepalive=60)
-    client.subscribe("aichikaw/pong")
-    client.message_callback_add("aichikaw/pong", on_message_from_pong)
+    client.subscribe("aichikaw/ping")
+    client.message_callback_add("aichikaw/ping", on_message_from_ping)
 
     """ask paho-mqtt to spawn a separate thread to handle
     incoming and outgoing mqtt messages."""
     client.loop_start()
     time.sleep(1)
-
-    
-    #publish to rpi broker
-    client.publish("aichikaw/ping", f"{payloadNum}")
-    print("")
-    time.sleep(4)
 
 
     
