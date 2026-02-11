@@ -61,7 +61,7 @@ if __name__ == '__main__':
     #run once at the start
     #publish to rpi broker
     #print initial number
-    print("Initial number: ")
+    print("Initial number:", payloadNum)
     client.publish("aichikaw/ping", f"{payloadNum}")
     time.sleep(4)
 
