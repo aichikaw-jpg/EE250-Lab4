@@ -16,13 +16,13 @@ def on_message_from_ping(client,userdata,message):
         messageNum = int(message.payload.decode())
 
         #add 1 to it, and put it into a variable for the new payload
-        newMessage =  received_val + 1
+        newMessage =  messageNum + 1
 
         #print the received payload
-        print("Number Received: "+messageNum)
+        print("Number Received: ", messageNum)
         time.sleep(1)
 
-        client.publish("aichikaw/pong", str(new_val))
+        client.publish("aichikaw/pong", str(newMessage))
 
 
 if __name__ == '__main__':
@@ -51,7 +51,8 @@ if __name__ == '__main__':
     """ask paho-mqtt to spawn a separate thread to handle
     incoming and outgoing mqtt messages."""
     client.loop_start()
-    time.sleep(1)
+    while True: 
+        time.sleep(1)
 
 
     
