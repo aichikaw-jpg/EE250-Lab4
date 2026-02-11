@@ -11,7 +11,8 @@ a connection acknowledgement packet response from the server. """
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
 
-
+#function for receiving the number from pong
+#adds 1 and sends to the 2nd terminal
 def on_message_from_pong(client,userdata,message):
         #cast the payload and convert it to integer
         messageNum = int(message.payload.decode())
@@ -21,8 +22,10 @@ def on_message_from_pong(client,userdata,message):
 
         #print the received payload
         print("Number Received: ", messageNum)
+        #add a delay
         time.sleep(1)
 
+        #send back the new message to ping
         client.publish("aichikaw/ping", str(newMessage))
 
 
@@ -31,7 +34,7 @@ if __name__ == '__main__':
     ip_address="10.189.147.211" 
     """your code here"""
 
-    #payload: integer number
+    #payload: integer number at the start
     payloadNum = 4
 
     #create a client object
@@ -48,20 +51,28 @@ if __name__ == '__main__':
     client. If the connection request is successful, the callback attached to
     `client.on_connect` will be called."""
 
+    #connect to the raspberry pi
     client.connect(host="10.189.147.211", port=1883, keepalive=60)
+
+    #subscribe to pong and run on_message_from_pong when it receives a message
     client.subscribe("aichikaw/pong")
     client.message_callback_add("aichikaw/pong", on_message_from_pong)
 
+    #run once at the start
     #publish to rpi broker
+    #print initial number
+    print("Initial number: ")
     client.publish("aichikaw/ping", f"{payloadNum}")
-    print("")
     time.sleep(4)
 
 
     """ask paho-mqtt to spawn a separate thread to handle
     incoming and outgoing mqtt messages."""
+    #starts a loop
     client.loop_start()
+    #keeps the loop going
     while True: 
+        #creates a delay 
         time.sleep(1)
 
     

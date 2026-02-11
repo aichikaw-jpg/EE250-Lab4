@@ -11,6 +11,8 @@ a connection acknowledgement packet response from the server. """
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
 
+
+#function that receives a message from the 1st terminal and adds 1 to the number that was received and sends it back to the 1st terminal
 def on_message_from_ping(client,userdata,message):
         #cast the payload and convert it to integer
         messageNum = int(message.payload.decode())
@@ -22,6 +24,7 @@ def on_message_from_ping(client,userdata,message):
         print("Number Received: ", messageNum)
         time.sleep(1)
 
+        #send back to the 1st terminal using topic of pong
         client.publish("aichikaw/pong", str(newMessage))
 
 
@@ -51,6 +54,7 @@ if __name__ == '__main__':
     """ask paho-mqtt to spawn a separate thread to handle
     incoming and outgoing mqtt messages."""
     client.loop_start()
+    #keep loop going
     while True: 
         time.sleep(1)
 
